@@ -1,7 +1,8 @@
+#include <BH1750.h>
 #include "Sensor.h"
 #include "ReconVoz.h"
 #include "GeneradorEstado.h"
-
+BH1750 lightMeter;
 Sensor sensor;
 ReconVoz reconvoz;
 GeneradorEstado generadorestado;
@@ -35,30 +36,31 @@ void setup() {
   sensor.begin();
   reconvoz.begin();
   generadorestado.begin();
+  lightMeter.begin();
   inputString.reserve(200);
 }
 
 void loop() {
  int estado=0;
   int question=0;
-  if(times==0){
+  //if(times==0){
       generadorestado.responsRGB(4);
       humedadT = generadorestado.responsHumedadT();
       humedadA = generadorestado.responsHumedadA();
       temperatura = generadorestado.responsTemperaturA();
       Co2 = generadorestado.responsCo2();
-      lumen = generadorestado.responsLumen();
+      lumen = generadorestado.responsLumen(lightMeter.readLightLevel());
       niveles[0]=humedadT;
       niveles[1]=humedadA;
       niveles[2]=temperatura;
       niveles[3]=Co2;
       niveles[4]=lumen;
-      times=100000;
+      times=5000; // el sistema se actualiza cada 10 seg
       generadorestado.responsRGB(color);
-  }else{
-    times--;
+  //}else{
+  //  times--;
     
-  }
+  //}
 
   
   //RESEPCION DE DATOS POR BLUETOOTH
@@ -71,28 +73,28 @@ void loop() {
   
   if(inputString!=""){
     estado=1;
-    mensaje="Tengo critico los niveles de  ";
+    mensaje="Tengo ";
     if(niveles[0]=="Critico"){
-        mensaje.concat("humedad de tierra ");
+        mensaje.concat("sed");
     }
     if(niveles[1]=="Critico"){
-        mensaje.concat("humedad ambiente ");
+        mensaje.concat("calor");
     }
     if(niveles[2]=="Critico"){
-        mensaje.concat(" temperatura ");
+        mensaje.concat("calor");
     }
     if(niveles[3]=="Critico"){
-        mensaje.concat(" monoxido de carbono ");
+        mensaje.concat("poco oxigeno");
     }
     if(niveles[4]=="Critico"){
-        mensaje.concat(" luz ");
+        mensaje.concat(" poca luz ");
     }
     
   }
 
   
   if(estado==1){
-    if(mensaje=="Tengo critico los niveles de  "){
+    if(mensaje=="Tengo "){
         mensaje="Esta todo bien";
         color=2;
       }else{
@@ -109,12 +111,10 @@ void loop() {
       
     }
     if(question==3){
-      Serial.println(niveles[0]);
+      Serial.println("De humedad estoy "+niveles[0]);
     }
     if(question==4){
-      mensaje="De humedad estoy  ";
-      mensaje.concat(niveles[1]);
-      mensaje.concat("  y de temperatura  ");
+      mensaje="De temperatura estoy ";
       mensaje.concat(niveles[2]);
       Serial.println(mensaje);
     }
@@ -127,6 +127,9 @@ void loop() {
       generadorestado.responsRGB(1);
       delay(200);
       generadorestado.responsRGB(color);
+    }
+    if(question== -1){
+      Serial.println("No entiendo la pregunta");
     }
  }
 

@@ -20,7 +20,7 @@ class GeneradorEstado {
    //responde estado de CO2
    String responsCo2();
    //responde estado de lumenes de luz
-   String responsLumen();
+   String responsLumen( uint16_t lux);
    //genera indicador de estado mediante un led rgb
    void responsRGB(int);
    //Pregunta 1 (Hola Eva)--> reponde hola

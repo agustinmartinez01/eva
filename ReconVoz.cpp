@@ -19,13 +19,13 @@ int ReconVoz::generateQuestion(String estado){
       if(estado=="*Cómo estás*"){
       a=2;
       }else{
-        if((estado=="*Cómo estás de humedad*")||(estado=="*como estas de humedad*")){
+        if((estado=="*Cómo estás de humedad*")||(estado=="*como estas de humedad*")||(estado=="*cómo estás de humedad*")){
         a=3;
         }else{
-          if(estado=="*como estas de temperatura y humedad*"){
+          if((estado=="*como estas de temperatura*")|| (estado=="*cómo estás de temperatura*")){
              a=4;
           }else{
-            if(estado=="*como estas de sol*"){
+            if((estado=="*como estas de luz*") || (estado=="*cómo estás de luz*")){
               a=5;
             }else{
               if(estado=="*indica tu estado*"){

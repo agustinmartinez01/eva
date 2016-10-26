@@ -54,10 +54,8 @@ String GeneradorEstado::responsCo2(){
   } 
  }
 
-String GeneradorEstado::responsLumen(){
-  Sensor sensor;
-  int estatus = sensor.readgy30();
-  if(estatus<40){
+String GeneradorEstado::responsLumen( uint16_t lux){
+  if(lux>300){
     return("Estable");
   }else{
     return("Critico");  
